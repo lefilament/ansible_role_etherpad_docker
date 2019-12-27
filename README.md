@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/badge/licence-AGPL--3-blue.svg)](http://www.gnu.org/licenses/agpl "License: AGPL-3")
 
-This role allows you to deploy Etherpad docker with associated postgres DB.
+This role allows you to deploy Etherpad docker based on official [Etherpad docker image](https://hub.docker.com/r/etherpad/etherpad) with associated Postgres DB.
 
 Prior to running this role, you would need to have docker installed on your server and a traefik proxy (which is the purpose of [this role](https://github.com/lefilament/ansible_role_docker_server))
 
