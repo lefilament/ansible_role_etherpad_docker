@@ -1,0 +1,58 @@
+version: '2.1'
+  
+services:
+  etherpad:
+    image: etherpad/etherpad:latest
+    container_name: etherpad
+    environment:
+      NODE_ENV: production
+      TITLE: "Le Filament Pad"
+      FAVICON: "https://le-filament.com/icon.png"
+      SKIN_NAME: colibris
+      SHOW_SETTINGS_IN_ADMIN_PAGE: "true"
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: {{ pad_db_name }}
+      DB_USER: {{ pad_db_user }}
+      DB_PASS: {{ pad_db_pass }}
+      ADMIN_PASSWORD: {{ pad_admin_pass }}
+      TRUST_PROXY: "true"
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      default:
+      inverseproxy_shared:
+    labels:
+      traefik.docker.network: "inverseproxy_shared"
+      traefik.enable: "true"
+      traefik.frontend.headers.STSSeconds: "15552000"
+      traefik.frontend.headers.STSIncludeSubdomains: "true"
+      traefik.frontend.headers.STSPreload: "true"
+      traefik.frontend.passHostHeader: "true"
+      traefik.port: "9001"
+      traefik.own.frontend.rule: "Host:{{ pad_url }}"
+
+  db:
+    image: postgres
+    container_name: etherpad_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: {{ pad_db_name }}
+      POSTGRES_USER: {{ pad_db_user }}
+      POSTGRES_PASSWORD: {{ pad_db_pass }}
+    volumes:
+      - db:/var/lib/postgresql/data:z
+
+networks:
+    default:
+        internal: true
+        driver_opts:
+            encrypted: 1
+    inverseproxy_shared:
+        external: true
+
+volumes:
+    db:
+

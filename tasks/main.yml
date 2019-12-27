@@ -1,0 +1,12 @@
+---
+
+## Install Etherpad docker
+- name: Install etherpad docker
+  template:
+    src: etherpad.yaml.j2
+    dest: /home/docker/etherpad.yaml
+    owner: root
+    group: root
+    mode: 0400
+  notify: 
+    - start etherpad docker
