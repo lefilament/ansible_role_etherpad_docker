@@ -10,3 +10,30 @@
     mode: 0400
   notify: 
     - start etherpad docker
+
+## Backup Etherpad section
+- name: Install Etherpad backup compose file
+  template:
+    src: backup.yaml.j2
+    dest: /home/docker/backups/backup-etherpad.yaml
+    owner: root
+    group: root
+    mode: 0400
+  when: inventory_hostname in groups['maintenance_contract']
+
+- name: Copy docker file for mysql duplicity
+  copy:
+    src: ../docker_odoo/files/Dockerfile-backup
+    dest: /home/docker/backups/Dockerfile-postgres
+    owner: root
+    group: root
+    mode: 0644
+  when: inventory_hostname in groups['maintenance_contract']
+
+- name: add cron job to run backup every week
+  cron:
+    name: backup etherpad
+    minute: 33
+    hour: 3
+    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-etherpad.yaml run --rm backup_etherpad 
+  when: inventory_hostname in groups['maintenance_contract']

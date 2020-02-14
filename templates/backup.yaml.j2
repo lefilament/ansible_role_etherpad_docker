@@ -1,0 +1,38 @@
+version: "2.1"
+services:
+    backup_etherpad:
+        build:
+            context: .
+            dockerfile: Dockerfile-postgres
+        image: filament/duplicity:postgres
+        hostname: backup-etherpad
+        domainname: "{{ pad_url }}"
+        environment:
+            DST: "swift://etherpad_{{ inventory_hostname|lower }}"
+            PGDATABASE: "{{ pad_db_name }}"
+            PGPASSWORD: "{{ pad_db_pass }}"
+            PGUSER: "{{ pad_db_user }}"
+            PASSPHRASE: "{{ pad_db_pass }}"
+            SWIFT_USERNAME: "{{ swift_cloud_username }}"
+            SWIFT_PASSWORD: "{{ swift_cloud_password }}"
+            SWIFT_AUTHURL: "{{ swift_cloud_authurl }}"
+            SWIFT_AUTHVERSION: {{ swift_cloud_authversion }}
+            SWIFT_TENANTNAME: "{{ swift_cloud_tenantname }}"
+            SWIFT_TENANTID: "{{ swift_cloud_tenantid }}"
+            SWIFT_REGIONNAME: "{{ swift_cloud_regionname }}"
+            JOB_300_WHAT: "backup --full-if-older-than 1W"
+            JOB_301_WHAT: "dup remove-all-inc-of-but-n-full 3 --force $$DST $$@"
+            JOB_301_WHEN: "daily"
+            JOB_302_WHAT: "dup remove-all-but-n-full 3 --force $$DST $$@"
+            JOB_302_WHEN: "daily"
+        command:
+            - /etc/periodic/daily/jobrunner
+
+networks:
+    tuleap_default:
+        driver_opts:
+            encrypted: 1
+        external: true
+    public:
+        driver_opts:
+            encrypted: 1
