@@ -25,18 +25,9 @@ services:
       default:
       inverseproxy_shared:
     labels:
-      traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
-      traefik.http.routers.etherpad-unsec.entrypoints: "http"
-      traefik.http.routers.etherpad-unsec.middlewares: "https-redirect@file"
-      traefik.http.routers.etherpad-unsec.rule: "Host(`{{ pad_url }}`)"
-      traefik.http.routers.etherpad.entrypoints: "https"
-      traefik.http.routers.etherpad.middlewares: "security-headers@file"
       traefik.http.routers.etherpad.rule: "Host(`{{ pad_url }}`)"
       traefik.http.routers.etherpad.service: "etherpad"
-      traefik.http.routers.etherpad.tls: "true"
-      traefik.http.routers.etherpad.tls.certresolver: "le"
-      traefik.http.routers.etherpad.tls.options: "default@file"
       traefik.http.services.etherpad.loadbalancer.server.port: "9001"
 
   db:
