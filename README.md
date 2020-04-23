@@ -3,6 +3,7 @@
 [![](https://img.shields.io/badge/licence-AGPL--3-blue.svg)](http://www.gnu.org/licenses/agpl "License: AGPL-3")
 
 This role allows you to deploy Etherpad docker based on official [Etherpad docker image](https://hub.docker.com/r/etherpad/etherpad) with associated Postgres DB.
+This role also embeds automatic backups towards swift storage every day (with one full backup every week and retention of 3 full backups) using duplicity based on [Tecnativa docker image](https://hub.docker.com/r/tecnativa/duplicity). See [Ansible docker odoo role](https://github.com/lefilament/ansible_role_odoo_docker/blob/master/files/Dockerfile-backup) for building that docker image.
 
 Prior to running this role, you would need to have docker installed on your server and a traefik proxy (which is the purpose of [this role](https://github.com/lefilament/ansible_role_docker_server))
 
@@ -28,6 +29,15 @@ pad_db_user:
 pad_db_pass: 
 # Etherpad Admin Password
 pad_admin_pass: 
+
+## Backup Swift Storage configuration
+swift_username:
+swift_password:
+swift_authurl:
+swift_authversion:
+swift_tenantname:
+swift_tenantid:
+swift_regionname:
 
 ```
 
