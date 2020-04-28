@@ -25,11 +25,14 @@ services:
             JOB_301_WHEN: "daily"
             JOB_302_WHAT: "dup remove-all-but-n-full 3 --force $$DST $$@"
             JOB_302_WHEN: "daily"
+        networks:
+            - etherpad_default
+            - public
         command:
             - /etc/periodic/daily/jobrunner
 
 networks:
-    tuleap_default:
+    etherpad_default:
         driver_opts:
             encrypted: 1
         external: true
