@@ -1,7 +1,7 @@
 ---
 
 - name: start etherpad docker
-  docker_service:
+  docker_compose:
     project_src: /home/docker/
     files: etherpad.yaml
     project_name: etherpad
