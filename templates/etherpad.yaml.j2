@@ -2,7 +2,9 @@ version: '2.1'
   
 services:
   etherpad:
-    image: etherpad/etherpad:latest
+    build:
+      context: .
+    image: lefilament/etherpad:latest
     container_name: etherpad
     environment:
       NODE_ENV: production
@@ -17,6 +19,7 @@ services:
       DB_USER: {{ pad_db_user }}
       DB_PASS: {{ pad_db_pass }}
       ADMIN_PASSWORD: {{ pad_admin_pass }}
+      SOFFICE: "/usr/bin/soffice"
       TRUST_PROXY: "true"
     restart: unless-stopped
     depends_on:

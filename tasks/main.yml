@@ -1,10 +1,25 @@
 ---
 
+- name: create Etherpad docker structure on server in /home/docker/etherpad
+  file:
+    name: /home/docker/etherpad
+    state: directory
+    owner: root
+    group: root
+
 ## Install Etherpad docker
+- name: copy Dockerfile
+  copy:
+    src: Dockerfile
+    dest: /home/docker/etherpad/Dockerfile
+    owner: root
+    group: root
+    mode: '0644'
+
 - name: Install etherpad docker
   template:
     src: etherpad.yaml.j2
-    dest: /home/docker/etherpad.yaml
+    dest: /home/docker/etherpad/docker-compose.yaml
     owner: root
     group: root
     mode: '0400'
