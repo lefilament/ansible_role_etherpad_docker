@@ -21,7 +21,7 @@ ansible_become_pass:
 ansible_port: 
 
 ## Etherpad configuration
-# Etherpad URL
+# Etherpad URL  (only sub.domain without https:// in front)
 pad_url: 
 # Etherpad DB
 pad_db_name: 
