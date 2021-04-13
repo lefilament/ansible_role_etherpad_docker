@@ -1,5 +1,5 @@
 version: '2.1'
-  
+
 services:
   etherpad:
     build:
@@ -34,7 +34,7 @@ services:
       traefik.http.services.etherpad.loadbalancer.server.port: "9001"
 
   db:
-    image: postgres
+    image: postgres:12
     container_name: etherpad_db
     restart: unless-stopped
     environment:
