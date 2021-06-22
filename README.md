@@ -2,7 +2,7 @@ docker_etherpad
 ===============
 
 This role deploys Etherpad with Docker based on official [Etherpad docker image](https://hub.docker.com/r/etherpad/etherpad) with associated Postgres DB.
-The main repo for this role is on [Le Filament GitLab](https://sources.le-filament.com/lefilament/ansible-roles/docker_server.git)
+The main repo for this role is on [Le Filament GitLab](https://sources.le-filament.com/lefilament/ansible-roles/docker_etherpad.git)
 
 Requirements
 ------------
