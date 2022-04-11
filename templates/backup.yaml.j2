@@ -2,7 +2,7 @@ version: "2.1"
 services:
     backup_etherpad:
         image: tecnativa/duplicity:postgres
-        hostname: backup-etherpad
+        hostname: {{ inventory_hostname_short | lower | regex_replace('_','') }}-etherpad
         environment:
             DST: "swift://etherpad_{{ inventory_hostname|lower }}"
             PGDATABASE: "{{ pad_db_name }}"
@@ -19,9 +19,12 @@ services:
             JOB_300_WHAT: "backup --full-if-older-than 6D"
             JOB_302_WHAT: "dup remove-all-but-n-full 5 --force $$DST $$@"
             JOB_302_WHEN: "daily"
+            OPTIONS: "--allow-source-mismatch"
         networks:
             - etherpad_default
             - public
+        volumes:
+            - pad_backup_cache:/root/.cache/duplicity/
         command:
             - /etc/periodic/daily/jobrunner
 
@@ -31,3 +34,6 @@ networks:
     public:
         driver_opts:
             encrypted: 1
+
+volumes:
+    pad_backup_cache:
