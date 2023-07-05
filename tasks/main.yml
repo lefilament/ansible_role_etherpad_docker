@@ -1,64 +1,63 @@
 ---
 
-- name: create Etherpad docker structure on server in /home/docker/etherpad
-  file:
-    name: /home/docker/etherpad
-    state: directory
-    owner: root
-    group: root
-    mode: '0755'
+- name: Create Etherpad docker structure on server in /home/docker/etherpad
+  ansible.builtin.file:
+      name: /home/docker/etherpad
+      state: directory
+      owner: root
+      group: root
+      mode: '0755'
 
 ## Install Etherpad docker
-- name: copy Dockerfile
-  copy:
-    src: Dockerfile
-    dest: /home/docker/etherpad/Dockerfile
-    owner: root
-    group: root
-    mode: '0644'
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+      src: Dockerfile
+      dest: /home/docker/etherpad/Dockerfile
+      owner: root
+      group: root
+      mode: '0644'
 
 - name: Install etherpad docker
-  template:
-    src: etherpad.yaml.j2
-    dest: /home/docker/etherpad/docker-compose.yaml
-    owner: root
-    group: root
-    mode: '0400'
+  ansible.builtin.template:
+      src: etherpad.yaml.j2
+      dest: /home/docker/etherpad/docker-compose.yaml
+      owner: root
+      group: root
+      mode: '0400'
   notify:
-    - start etherpad docker
+      - Start etherpad docker
 
 ## Backup Etherpad section
 - name: Install Etherpad backup compose file
-  template:
-    src: backup.yaml.j2
-    dest: /home/docker/backups/backup-etherpad.yaml
-    owner: root
-    group: root
-    mode: '0400'
+  ansible.builtin.template:
+      src: backup.yaml.j2
+      dest: /home/docker/backups/backup-etherpad.yaml
+      owner: root
+      group: root
+      mode: '0400'
   when: inventory_hostname in groups['maintenance_contract']
 
 - name: Install Etherpad backup2 compose file
-  template:
-    src: backup2.yaml.j2
-    dest: /home/docker/backups/backup2-etherpad.yaml
-    owner: root
-    group: root
-    mode: '0400'
+  ansible.builtin.template:
+      src: backup2.yaml.j2
+      dest: /home/docker/backups/backup2-etherpad.yaml
+      owner: root
+      group: root
+      mode: '0400'
   when: inventory_hostname in groups['maintenance_contract']
 
-
-- name: add cron job to run backup every day
-  cron:
-    name: backup etherpad
-    minute: "33"
-    hour: "3"
-    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-etherpad.yaml run --rm backup_etherpad
+- name: Add cron job to run backup every day
+  ansible.builtin.cron:
+      name: backup etherpad
+      minute: "50"
+      hour: "03"
+      job: /usr/bin/docker-compose -f /home/docker/backups/backup-etherpad.yaml run --rm backup_etherpad
   when: inventory_hostname in groups['maintenance_contract']
 
-- name: add cron job to run backup2 every day
-  cron:
-    name: backup2 etherpad
-    minute: "43"
-    hour: "6"
-    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup2-etherpad.yaml run --rm backup_etherpad
+- name: Add cron job to run backup2 every day
+  ansible.builtin.cron:
+      name: backup2 etherpad
+      minute: "00"
+      hour: "01"
+      job: /usr/bin/docker-compose -f /home/docker/backups/backup2-etherpad.yaml run --rm backup_etherpad
   when: inventory_hostname in groups['maintenance_contract']

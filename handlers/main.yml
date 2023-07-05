@@ -1,8 +1,8 @@
 ---
 
-- name: start etherpad docker
-  docker_compose:
-    project_src: /home/docker/etherpad
+- name: Start etherpad docker
+  community.docker.docker_compose:
+      project_src: /home/docker/etherpad
   async: 120
   poll: 10
   when: not ansible_check_mode
